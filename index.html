@@ -320,28 +320,28 @@
       <!-- RIGHT: FORM -->
       <div class="col-lg-7">
         <div class="contact-form-box">
-          <form name="contact" netlify>
+          <form name="contact" method="POST" netlify>
             
             <div class="row">
               <div class="col-md-6 mb-3">
-                <input type="text" class="form-control" placeholder="Full Name" required>
+                <input type="text" class="form-control" placeholder="name" name="name">
               </div>
               <div class="col-md-6 mb-3">
-                <input type="tel" class="form-control" placeholder="Phone Number" required>
+                <input type="tel" class="form-control" placeholder="Phone Number" name="phoneNumber">
               </div>
             </div>
 
             <div class="mb-3">
-              <input type="email" class="form-control" placeholder="Email Address">
+              <input type="email" class="form-control" placeholder="Email Address" name="email" required>
             </div>
 
             <div class="mb-3">
-              <textarea class="form-control" rows="5" placeholder="Tell us about your project..." required></textarea>
+              <textarea class="form-control" rows="5" placeholder="message" name="message" required></textarea>
             </div>
 
             <div class="text-end">
-              <button class="btn btn-gold px-4 text-white">
-                Send Inquiry
+              <button type="submit" class="btn btn-gold px-4 text-white">
+                Send
               </button>
             </div>
 
