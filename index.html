@@ -350,13 +350,13 @@
   </div>
 </section>
 
-<!-- CTA -->
+<!-- CALL TO ACTION SECTION -->
 <section class="section-padding text-center bg-dark text-white">
   <div class="container">
     <h2 class="fw-bold">Need Strong, Reliable Metal Work?</h2>
     <p class="mt-3">Call us today or message us on Facebook for a free quote.</p>
-    <a href="tel:09694871508" class="btn btn-gold btn-lg me-2">Call Now</a>
-    <a href="https://www.facebook.com" target="_blank" class="btn btn-outline-light btn-lg">Message on Facebook</a>
+    <a href="tel:09694871508" id="cta-call" class="btn btn-gold btn-lg me-2">Call Now</a>
+    <a href="https://www.facebook.com" target="_blank" id="cta-fb" class="btn btn-outline-light btn-lg">Message on Facebook</a>
   </div>
 </section>
 
@@ -434,9 +434,9 @@
   </div>
 </div>
 <!-- Toast Notification -->
-<div id="toast" class="toast-box">
+<!-- <div id="toast" class="toast-box">
   <span id="toast-message">Message sent!</span>
-</div>
+</div> -->
 <!-- ✅ Success Modal -->
 <div id="success-modal" class="custom-modal">
   <div class="custom-modal-content">
@@ -536,29 +536,33 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script> -->
 <script>
+document.addEventListener("DOMContentLoaded", function () {
+
   const form = document.getElementById("contact-form");
   const modal = document.getElementById("success-modal");
   const closeBtn = document.getElementById("close-modal");
   const submitBtn = document.getElementById("submit-btn");
+  const modalHeading = modal.querySelector("h4");
+  const modalText = modal.querySelector("p");
 
+  // Encode function for form submission
   function encode(data) {
     return Object.keys(data)
       .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
       .join("&");
   }
 
+  // ------------------------------
+  // Contact form submission
+  // ------------------------------
   form.addEventListener("submit", function(e) {
     e.preventDefault();
-
     submitBtn.textContent = "Sending...";
     submitBtn.disabled = true;
 
     const formData = new FormData(form);
-
     const data = {};
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
+    formData.forEach((value, key) => data[key] = value);
 
     fetch("/", {
       method: "POST",
@@ -566,12 +570,15 @@ document.addEventListener("DOMContentLoaded", function () {
       body: encode(data)
     })
     .then(() => {
+      modalHeading.textContent = "✅ Message Sent!";
+      modalText.textContent = "Thanks for contacting us. We'll get back to you soon.";
       modal.style.display = "block";
-      console.info("working form submission");
       form.reset();
     })
     .catch(() => {
-      alert("Something went wrong. Please try again.");
+      modalHeading.textContent = "❌ Failed!";
+      modalText.textContent = "Something went wrong. Please try again.";
+      modal.style.display = "block";
     })
     .finally(() => {
       submitBtn.textContent = "Send";
@@ -579,15 +586,40 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // ------------------------------
   // Close modal
+  // ------------------------------
   closeBtn.onclick = () => modal.style.display = "none";
+  window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
 
-  // Close when clicking outside
-  window.onclick = (e) => {
-    if (e.target === modal) {
-      modal.style.display = "none";
+  // ------------------------------
+  // CTA Buttons: Call Now & FB
+  // ------------------------------
+  const ctaCall = document.querySelector(".section-padding .btn-gold");
+  const ctaFb = document.querySelector(".section-padding .btn-outline-light");
+
+  ctaCall.addEventListener("click", function(e){
+    if (!navigator.userAgent.match(/Mobi/)) { // Desktop
+      e.preventDefault();
+      navigator.clipboard.writeText("09694871508");
+      modalHeading.textContent = "📋 Number Copied!";
+      modalText.textContent = "Use your phone to call 0969 487 1508.";
+      modal.style.display = "block";
+    } else {
+      // Mobile users will still use tel: link
+      modalHeading.textContent = "📞 Dialing...";
+      modalText.textContent = "Opening your phone app.";
+      modal.style.display = "block";
     }
-  };
+  });
+
+  ctaFb.addEventListener("click", function(e){
+    modalHeading.textContent = "💬 Messenger";
+    modalText.textContent = "Opening Facebook Messenger in a new tab.";
+    modal.style.display = "block";
+  });
+
+});
 </script>
 
 <!-- Vanilla JS <script>
