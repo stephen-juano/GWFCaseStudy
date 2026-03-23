@@ -178,6 +178,12 @@
   const closeBtn = document.getElementById("close-modal");
   const submitBtn = document.getElementById("submit-btn");
 
+  function encode(data) {
+    return Object.keys(data)
+      .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+      .join("&");
+  }
+
   form.addEventListener("submit", function(e) {
     e.preventDefault();
 
@@ -186,9 +192,15 @@
 
     const formData = new FormData(form);
 
+    const data = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+
     fetch("/", {
       method: "POST",
-      body: formData
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: encode(data)
     })
     .then(() => {
       modal.style.display = "block";
