@@ -172,7 +172,7 @@
   box-shadow: 0 15px 40px rgba(0,0,0,0.15);
 }
 </style>
-<script>
+<script type="text/javascript">
   const form = document.getElementById("contact-form");
   const modal = document.getElementById("success-modal");
   const closeBtn = document.getElementById("close-modal");
@@ -200,10 +200,11 @@
     fetch("/", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: encode(data)
+      body: new URLSearchParams(formData).toString()//encode(data)
     })
     .then(() => {
       modal.style.display = "block";
+      console.info("working form submission");
       form.reset();
     })
     .catch(() => {
